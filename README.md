@@ -83,6 +83,13 @@ Results land in the `output` folder:
 - Compared against a baseline that always guesses the average "up" rate.
 
 ---
+## Results
+
+![Calibration chart](output/calibration.png)
+
+![Strategy vs baseline](output/strategy_vs_baseline.png)
+
+![Feature weights](output/feature_weights.png)
 
 ## What I found (first run, Oct 2026)
 
