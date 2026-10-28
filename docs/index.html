@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What Are the Odds? Stock Probability Model</title>
+  <meta name="description" content="A machine learning model's chance that each of the 100 biggest US stocks closes higher in 5 trading days, with an honest look at how much to trust it. By Gurutej Bandla.">
+  <meta name="author" content="Gurutej Bandla">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2314213D'/><path d='M16 2a14 14 0 0 1 0 28z' fill='%233557D4'/></svg>">
+</head>
+<body>
+  <a class="skip" href="#lookup">Skip to stock lookup</a>
+
+  <header class="top wrap">
+    <span class="brand">Stock Probability Model</span>
+    <nav aria-label="Sections">
+      <a href="#all">All stocks</a>
+      <a href="#trust">Can you trust it?</a>
+      <a href="#how">How it works</a>
+      <a href="https://github.com/Gurutej11-web/stock-prob-model">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="title">
+      <h1 id="title">What are the odds?</h1>
+      <p class="lede">
+        A machine learning model's chance that each of the 100 biggest US stocks closes higher
+        <span class="nowrap">5 trading days</span> from now. Every number is measured against a coin flip, because that's
+        about how close the market lets anyone get.
+      </p>
+
+      <form class="search" id="lookup" role="search" autocomplete="off">
+        <label for="q">Look up a stock</label>
+        <div class="search-row">
+          <input id="q" name="q" type="text" placeholder="NVDA or Apple" list="tickers" spellcheck="false">
+          <button type="submit">Show odds</button>
+        </div>
+        <datalist id="tickers"></datalist>
+        <p class="search-msg" id="search-msg" role="status" aria-live="polite"></p>
+      </form>
+
+      <figure class="strip" aria-labelledby="strip-cap">
+        <figcaption id="strip-cap">
+          <span>Every stock today, on the coin-flip line</span>
+          <span class="muted" id="strip-note"></span>
+        </figcaption>
+        <div class="strip-plot" id="strip" role="list"></div>
+        <div class="strip-axis" id="strip-axis" aria-hidden="true"></div>
+      </figure>
+    </section>
+
+    <section class="detail-wrap wrap" aria-live="polite">
+      <article class="detail" id="detail" tabindex="-1"></article>
+    </section>
+
+    <section class="wrap block" id="all" aria-labelledby="all-title">
+      <div class="block-head">
+        <h2 id="all-title">All stocks</h2>
+        <input id="filter" type="search" placeholder="Filter" aria-label="Filter stocks">
+      </div>
+      <div class="table-scroll">
+        <table class="table" id="table">
+          <thead>
+            <tr>
+              <th scope="col" class="num"><button data-sort="rank">#</button></th>
+              <th scope="col"><button data-sort="t">Stock</button></th>
+              <th scope="col" class="chance-col"><button data-sort="p" aria-sort="descending">Chance up</button></th>
+              <th scope="col" class="num hide-sm"><button data-sort="close">Price</button></th>
+              <th scope="col" class="num hide-sm"><button data-sort="chg1d">Last day</button></th>
+              <th scope="col" class="hide-md">Biggest reason</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="button" class="more" id="more" hidden></button>
+    </section>
+
+    <section class="wrap block trust" id="trust" aria-labelledby="trust-title">
+      <h2 id="trust-title">Can you trust it?</h2>
+      <p class="intro" id="trust-intro"></p>
+
+      <div class="verdict">
+        <h3>The percentages: mostly yes</h3>
+        <p id="cal-text"></p>
+        <div class="stats" id="stats"></div>
+        <figure class="chart">
+          <figcaption>When the model said X%, how often did the stock actually go up?</figcaption>
+          <div class="cal-layout">
+            <div class="chart-box square"><canvas id="cal-chart" aria-label="Calibration chart" role="img"></canvas></div>
+            <ul class="read-guide">
+              <li><b>The dashed line is perfect honesty.</b> A dot on it means "said 55%, went up 55% of the time."</li>
+              <li><b>Bigger dots mean more predictions.</b> Almost all of them sit between 51% and 59%, and those stay close to the line.</li>
+              <li><b>The far ends are rare.</b> The model almost never goes below 45% or above 60%, so those dots rest on a few hundred cases each.</li>
+            </ul>
+          </div>
+        </figure>
+      </div>
+
+      <div class="verdict">
+        <h3>Beating the market with it: no</h3>
+        <p id="bt-text"></p>
+        <div class="toggle" role="group" aria-label="Which stocks to include">
+          <button type="button" data-set="full" aria-pressed="true">All 101 stocks</button>
+          <button type="button" data-set="nw" aria-pressed="false">Without the 10 biggest winners</button>
+        </div>
+        <figure class="chart">
+          <figcaption id="bt-cap">What $1,000 would have grown to</figcaption>
+          <div class="chart-box wide"><canvas id="bt-chart" aria-label="Strategy backtest chart" role="img"></canvas></div>
+          <p class="legend" id="bt-legend"></p>
+        </figure>
+        <div class="table-scroll">
+          <table class="table checks" id="checks">
+            <thead><tr><th scope="col">Check</th><th scope="col" class="num">Result</th><th scope="col">What it means</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap block how" id="how" aria-labelledby="how-title">
+      <h2 id="how-title">How it works</h2>
+      <ol class="steps">
+        <li><strong>Download prices.</strong> About 12 years of daily open, high, low, close and volume for each stock, plus the S&amp;P 500 and the VIX fear index, from Yahoo Finance.</li>
+        <li><strong>Turn prices into clues.</strong> 15 per stock per day, the same things a trader eyeballs: recent moves, distance from the 20, 50 and 200-day averages, RSI, volatility, volume spikes and what the whole market is doing.</li>
+        <li><strong>Train on the past.</strong> A logistic regression learns from 2014 to 2022 how often stocks with clues like these closed higher a week later. A fancier gradient boosting model was tested too and did worse.</li>
+        <li><strong>Test on data it never saw.</strong> Every check on this page uses 2023 onward, with a gap so no training answers leak into the test.</li>
+        <li><strong>Predict.</strong> The final model is retrained on everything and scores today's clues. The data on this page refreshes every weekday after the market closes.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Built by Gurutej Bandla. Code and full write-up on <a href="https://github.com/Gurutej11-web/stock-prob-model">GitHub</a>.</p>
+    <p class="muted" id="foot-date"></p>
+    <p class="muted">A learning project, not financial advice. Small edges like these are easy to lose to trading costs, taxes and bad luck.</p>
+  </footer>
+
+  <div class="tip" id="tip" role="tooltip" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

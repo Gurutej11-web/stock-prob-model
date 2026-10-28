@@ -1,0 +1,29 @@
+ROBUSTNESS CHECKS — is the model's edge real?
+Test period: 2023-01-03 to 2026-10-16, 191 periods of 5 trading days, top 10 picks each time
+
+1) MODEL vs. DUMB STRATEGIES (no trading costs)
+   Model's top 10                      +163.6%
+   10 jumpiest stocks                  +317.5%
+   Last month's 10 biggest winners     +245.6%
+   All stocks equally                  +102.2%
+   Model's picks are 1.07x as jumpy as the average stock (1.00 = same risk).
+
+2) RANDOM PICKS (500 random 10-stock portfolios)
+   Typical random result: +100.6% (middle 90%: +49.2% to +168.3%)
+   Random picks did as well as the model 6.6% of the time.
+
+3) SURVIVORSHIP CHECK — remove the 10 biggest winners of the test period
+   Removed: PLTR, NVDA, AMD, AVGO, GE, META, TSLA, LLY, GOOGL, GOOG
+   Model's top 10:      +71.4%
+   All stocks equally:  +71.8%
+   Gap: -0.4% (was +61.4% with them included)
+
+4) TRADING COSTS (0.1% per buy or sell)
+   The model replaces 58% of its picks every 5 days on average.
+   Model's top 10 after costs: +111.4% (before: +163.6%)
+   All stocks equally:         +102.2% (hardly ever trades)
+
+5) IS THE EDGE MORE THAN LUCK? (t-stat: above ~2 = probably real)
+   Average edge per period:  +0.16% (t-stat 1.24)
+   After trading costs:      +0.04% (t-stat 0.33)
+   Without the big winners:  +0.01% (t-stat 0.11)

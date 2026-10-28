@@ -8,11 +8,15 @@ Takes a minute or two. Re-run it any day to get the newest prices.
 """
 
 import os
+import warnings
 import pandas as pd
 import yfinance as yf
 
 from config import START_DATE, DATA_DIR
 from tickers import TICKERS, MARKET_TICKER, VIX_TICKER
+
+# Hide harmless "this style is deprecated" warnings from yfinance on newer pandas
+warnings.filterwarnings("ignore")
 
 
 def download(tickers):
