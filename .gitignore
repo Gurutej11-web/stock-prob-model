@@ -1,0 +1,4 @@
+data/
+output/model.joblib
+output/predictions_today.csv
+__pycache__/

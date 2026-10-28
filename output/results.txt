@@ -1,0 +1,56 @@
+STOCK PROBABILITY MODEL — RESULTS
+Question: will the stock be higher 5 trading days from now?
+Test period: 2023-01-03 to 2026-10-19 (101 stocks, 96,152 predictions)
+
+Baseline (always guess 55.5%): Brier = 0.2487, accuracy = 54.0%
+Stocks actually went up 54.0% of the time in the test period.
+
+How to read this:
+  AUC: 0.50 = coin flip, 1.00 = perfect. Anything above ~0.52 on stocks is meaningful.
+  Brier: lower is better. Must be LOWER than the baseline to count as useful.
+
+Logistic regression:
+  AUC      = 0.5079
+  Brier    = 0.2486
+  Accuracy = 54.0%
+  Prediction range: 31.1% to 72.1%
+
+Gradient boosting:
+  AUC      = 0.4990
+  Brier    = 0.2500
+  Accuracy = 53.1%
+  Prediction range: 29.8% to 73.7%
+
+Calibration (logistic regression): when it says X%, how often did it go up?
+  said 42.8% -> actually up 41.5%  (301 predictions)
+  said 46.9% -> actually up 50.3%  (774 predictions)
+  said 49.2% -> actually up 51.5%  (1,886 predictions)
+  said 51.2% -> actually up 52.8%  (6,258 predictions)
+  said 53.2% -> actually up 54.0%  (19,170 predictions)
+  said 55.0% -> actually up 53.7%  (33,982 predictions)
+  said 56.9% -> actually up 54.6%  (24,166 predictions)
+  said 58.8% -> actually up 53.3%  (7,477 predictions)
+  said 61.6% -> actually up 62.4%  (2,138 predictions)
+
+Strategy test (every 5 days, hold the model's top 10 picks, no trading costs):
+  Model's top 10:      +163.6%
+  All stocks equally:   +102.2%
+  Model beat the baseline in 53% of the 191 periods
+  Reminder: real trading has costs and taxes, so the model's real edge would be smaller.
+
+Clue weights (logistic regression, positive = pushes chance up):
+  -0.1259  price vs. 50-day average
+  +0.1007  move over the past month
+  +0.0729  price vs. 200-day average
+  -0.0482  move over the past 3 months
+  +0.0458  market fear level (VIX)
+  -0.0409  whole market's move this month
+  +0.0392  price vs. 20-day average
+  -0.0373  volume vs. normal
+  -0.0285  how jumpy the price has been
+  -0.0267  move over the past week
+  +0.0200  change in market fear this week
+  -0.0161  RSI (overbought/oversold)
+  +0.0069  whole market's move this week
+  -0.0057  move yesterday
+  -0.0050  size of the daily high-low range
