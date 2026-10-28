@@ -1,0 +1,38 @@
+name: Update site data
+
+on:
+  schedule:
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install libraries
+        run: pip install -r requirements.txt
+      - name: Download prices
+        run: python step1_download_data.py
+      - name: Train and test the model
+        run: python step2_train_and_test.py
+      - name: Export website data
+        run: python step5_export_site_data.py
+      - name: Commit new data
+        run: |
+          git config user.name "Gurutej Bandla"
+          git config user.email "gurutejbandla07@gmail.com"
+          git add docs/data.json
+          if git diff --cached --quiet; then
+            echo "No new data today."
+          else
+            git commit -m "Update predictions for $(date -u +%Y-%m-%d)"
+            git push
+          fi
